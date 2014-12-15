@@ -11,7 +11,7 @@ main :: IO ()
 main = do
   putStr "List the ingredients you would like to combine: "
   c <- getLine
-  case cook $ splitOn ", " c of
+  case cook . splitOn ", " $ c of
    Just s -> do
      putStrLn "1... 2... 3... Poof! You admire your latest creation."
      putStrLn . show $ s
@@ -22,52 +22,62 @@ cook = mconcat . fmap (flip M.lookup items)
 
 items :: Map Name Item
 items = M.fromList $
+        fmap (\(name, ItemInfo attr b c d) ->
+               (name, Item (mconcat . map fromAttribute $ attr) b c d))
   [ (
-       "Bat Wing",
-       Item
-       [ Speed 10 ]
-       []
-       [ Quick ]
-       Ingredient
+      "Bat Wing",
+      ItemInfo
+      [ Speed 10 ]
+      []
+      [ Quick ]
+      Ingredient
     ),
     (
-       "Dagger",
-       Item
-       [ Attack 15 ]
-       []
-       []
-       Blade
+      "Dagger",
+      ItemInfo
+      [ Attack 15 ]
+      []
+      []
+      Blade
     ),
     (
-       "Iron Ore",
-       Item
-       [ Attack 10 ]
-       []
-       []
-       Ingredient
+      "Iron Ore",
+      ItemInfo
+      [ Attack 10 ]
+      []
+      []
+      Ingredient
     ),
     (
-       "Leather",
-       Item
-       [ Defense 10 ]
-       []
-       []
-       Armor
+      "Leather",
+      ItemInfo
+      [ Defense 10 ]
+      []
+      [ Leather ]
+      Armor
     ),
     (
-       "Daedric Heart",
-       Item
-       [ Magic 20, Luck (-5) ]
-       [Cursed]
-       [Hell]
-       Ingredient
+      "Daedric Heart",
+      ItemInfo
+      [ Magic 20, Luck (-5) ]
+      [ Cursed ]
+      [ Daedric ]
+      Ingredient
     ),
     (
-       "Barbed Tail",
-       Item
-       []
-       [Poisoned]
-       [Poison]
-       Ingredient
+      "Barbed Tail",
+      ItemInfo
+      []
+      [ Poisoned ]
+      [ Poison ]
+      Ingredient
+    ),
+    (
+      "Herb",
+      ItemInfo
+      [ Health 20 ]
+      []
+      [ Life ]
+      Ingredient
     )
   ]
