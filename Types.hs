@@ -3,7 +3,7 @@ module Types where
 import qualified Data.Map.Strict as M
 import           Data.Map.Strict (Map)
 import Data.Monoid
-import Data.List (intercalate, sort)
+import Data.List (intercalate, sort, nub)
 import Data.Maybe (mapMaybe)
 
 type Name = String
@@ -77,7 +77,8 @@ data Status
   deriving (Eq, Show)
 
 data Augmentation
-  = Quick
+  = Hardened
+  | Quick
   | Rusty
   | Poison
   | Steel
@@ -115,8 +116,8 @@ instance Show Item where
   show (Item attr status augment itemClass) =
     "Name: " <> convert augment <> " " <> choose itemClass <> "\n" <>
     "Attributes: " <> show attr <> "\n" <>
-    "Status Effects: " <> (intercalate ", " . map show) status
-    where convert = intercalate " " . fmap show . sort
+    "Status Effects: " <> (intercalate ", " . map show . nub) status
+    where convert = intercalate " " . fmap show . sort . nub
           choose x = case x of
             Ingredient -> show Potion
             _          -> show x

@@ -1,4 +1,4 @@
-module Main where
+module Alchemy where
 
 import qualified Data.Map.Strict as M
 import           Data.Map.Strict (Map)
@@ -45,7 +45,7 @@ items = M.fromList $
       ItemInfo
       [ Attack 10 ]
       []
-      []
+      [ Hardened ]
       Ingredient
     ),
     (
